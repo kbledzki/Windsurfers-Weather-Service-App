@@ -21,8 +21,8 @@ public class WeatherClient {
                 API_KEY);
         return Weather.builder()
                 .cityName(response.getCity_name())
-                .windSpeed(Arrays.stream(response.getData()).toList().get(1).getWind_spd())
-                .temperature(Arrays.stream(response.getData()).toList().get(1).getTemp())
+                .windSpeed(Arrays.stream(response.getData()).toList().get(15).getWind_spd())
+                .temperature(Arrays.stream(response.getData()).toList().get(15).getTemp())
                 .build();
     }
 }
