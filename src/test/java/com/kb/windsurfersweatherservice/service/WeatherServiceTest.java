@@ -10,14 +10,15 @@ class WeatherServiceTest {
 
     @BeforeEach
     void beforeEach() {
-        weatherService = new WeatherService(new WeatherClient());
+        weatherService = new WeatherService(new WeatherClient(), new DataService());
     }
-//    @Test
+
+    //    @Test
 //    void getWeatherList2() {
 //        weatherService.getWeatherListv2();
 //    }
     @Test
     void getWeatherList() {
-        weatherService.getWeatherList();
+        weatherService.getBestLocationToSurf("2023-12-10");
     }
 }

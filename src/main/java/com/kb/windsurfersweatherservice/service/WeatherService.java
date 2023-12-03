@@ -16,25 +16,27 @@ import java.util.stream.Collectors;
 public class WeatherService {
 
     private final WeatherClient weatherClient;
+    private final DataService dataService;
     private static final int MIN_WIND_SPEED = 5;
     private static final int MAX_WIND_SPEED = 18;
     private static final int MIN_TEMPERATURE = 5;
     private static final int MAX_TEMPERATURE = 35;
     private static final int MULTIPLIER = 3;
 
-    public Weather getBestLocationToSurf() {
-        String bestSurfingLocation = calculateBestSurfingLocation();
-        return weatherClient.getWeatherForCity(bestSurfingLocation);
+    public Weather getBestLocationToSurf(String date) {
+        long day = dataService.checkDays(date);
+        String bestSurfingLocation = calculateBestSurfingLocation(day);
+        return weatherClient.getWeatherForCity(bestSurfingLocation, day);
     }
 
-    private List<Weather> getWeatherForecastForAllCities() {
+    private List<Weather> getWeatherForecastForAllCities(long day) {
         List<Weather> weatherCityList = new ArrayList<>();
 
         for (CityName cityName : CityName.values()) {
-            Weather weatherForCity = weatherClient.getWeatherForCity(cityName.toString());
+            Weather weatherForCity = weatherClient.getWeatherForCity(cityName.toString(), day);
             weatherCityList.add(weatherForCity);
         }
-        return validSurfingCondition(weatherCityList);
+        return weatherCityList;
     }
 
     private List<Weather> validSurfingCondition(List<Weather> weatherCityList) {
@@ -47,9 +49,9 @@ public class WeatherService {
                 .collect(Collectors.toList());
     }
 
-    private String calculateBestSurfingLocation() {
-        List<Weather> weatherCityList = getWeatherForecastForAllCities();
+    private String calculateBestSurfingLocation(long day) {
         Map<String, Float> bestCodntionMap = new HashMap<>();
+        List<Weather> weatherCityList = validSurfingCondition(getWeatherForecastForAllCities(day));
         checkIfThereAreAnyGoodConditions(weatherCityList);
 
         weatherCityList.forEach(weather -> {

@@ -10,6 +10,8 @@ import java.time.LocalDate;
 @Service
 public class DataService {
 
+    private static final int MAX_FORECAST_DAY = 15;
+
     public long checkDays(String dateToCheck) {
         LocalDate dataNow = LocalDate.now();
         LocalDate dataToCheckWeather = parseDate(dateToCheck);
@@ -23,7 +25,7 @@ public class DataService {
     private void validDate(LocalDate dataNow, LocalDate dataToCheckWeather, long days) {
         if (dataToCheckWeather.isBefore(dataNow)) {
             throw new WeatherAppException(WeatherError.PAST_DATE);
-        } else if (days > 15) {
+        } else if (days > MAX_FORECAST_DAY) {
             throw new WeatherAppException(WeatherError.TOO_DISTANT_DATE);
         }
     }
