@@ -1,5 +1,7 @@
 package com.kb.windsurfersweatherservice.service;
 
+import com.kb.windsurfersweatherservice.exceptions.WeatherAppException;
+import com.kb.windsurfersweatherservice.exceptions.WeatherError;
 import com.kb.windsurfersweatherservice.model.CityName;
 import com.kb.windsurfersweatherservice.model.Weather;
 import com.kb.windsurfersweatherservice.webclient.weather.client.WeatherClient;
@@ -19,7 +21,6 @@ public class WeatherService {
     private static final int MIN_TEMPERATURE = 5;
     private static final int MAX_TEMPERATURE = 35;
     private static final int MULTIPLIER = 3;
-
 
     public Weather getBestLocationToSurf() {
         String bestSurfingLocation = calculateBestSurfingLocation();
@@ -47,13 +48,20 @@ public class WeatherService {
     }
 
     private String calculateBestSurfingLocation() {
-        List<Weather> weatherForecastForAllCities = getWeatherForecastForAllCities();
+        List<Weather> weatherCityList = getWeatherForecastForAllCities();
         Map<String, Float> bestCodntionMap = new HashMap<>();
+        checkIfThereAreAnyGoodConditions(weatherCityList);
 
-        weatherForecastForAllCities.forEach(weather -> {
+        weatherCityList.forEach(weather -> {
             float value = weather.getTemperature() + MULTIPLIER * weather.getWindSpeed();
             bestCodntionMap.put(weather.getCityName(), value);
         });
         return Collections.max(bestCodntionMap.keySet());
+    }
+
+    private void checkIfThereAreAnyGoodConditions(List<Weather> weatherCityList) {
+        if (weatherCityList.isEmpty()) {
+            throw new WeatherAppException(WeatherError.BAD_WEATHER_CONDITIONS_FOR_ALL_CITIES);
+        }
     }
 }
