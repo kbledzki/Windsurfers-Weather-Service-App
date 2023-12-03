@@ -1,5 +1,6 @@
 package com.kb.windsurfersweatherservice.controller;
 
+import com.kb.windsurfersweatherservice.model.Weather;
 import com.kb.windsurfersweatherservice.service.WeatherService;
 import com.kb.windsurfersweatherservice.webclient.weather.dto.WeatherbitForecastDto;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +14,7 @@ public class WeatherController {
     private final WeatherService weatherService;
 
     @GetMapping("/weather")
-    public WeatherbitForecastDto getWeather() {
+    public Weather getWeather() {
         return weatherService.getWeather();
     }
-
 }

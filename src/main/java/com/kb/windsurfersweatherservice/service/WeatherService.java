@@ -1,5 +1,6 @@
 package com.kb.windsurfersweatherservice.service;
 
+import com.kb.windsurfersweatherservice.model.Weather;
 import com.kb.windsurfersweatherservice.webclient.weather.client.WeatherClient;
 import com.kb.windsurfersweatherservice.webclient.weather.dto.WeatherbitForecastDto;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +12,7 @@ public class WeatherService {
 
     private final WeatherClient weatherClient;
 
-    public WeatherbitForecastDto getWeather() {
+    public Weather getWeather() {
         return weatherClient.getWeatherForCity("Sopot");
     }
 }

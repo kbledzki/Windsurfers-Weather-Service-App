@@ -1,8 +1,11 @@
 package com.kb.windsurfersweatherservice.webclient.weather.client;
 
+import com.kb.windsurfersweatherservice.model.Weather;
 import com.kb.windsurfersweatherservice.webclient.weather.dto.WeatherbitForecastDto;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Arrays;
 
 @Component
 public class WeatherClient {
@@ -11,11 +14,15 @@ public class WeatherClient {
     private static final String API_KEY = "66964f620c5d4dd9b43244e2021fdf6a";
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public WeatherbitForecastDto getWeatherForCity(String city) {
+    public Weather getWeatherForCity(String city) {
         WeatherbitForecastDto response = restTemplate.getForObject(WEATHER_URL + "?city={city}&key={apiKey}",
                 WeatherbitForecastDto.class,
                 city,
                 API_KEY);
-        return response;
+        return Weather.builder()
+                .cityName(response.getCity_name())
+                .windSpeed(Arrays.stream(response.getData()).toList().get(1).getWind_spd())
+                .temperature(Arrays.stream(response.getData()).toList().get(1).getTemp())
+                .build();
     }
 }
