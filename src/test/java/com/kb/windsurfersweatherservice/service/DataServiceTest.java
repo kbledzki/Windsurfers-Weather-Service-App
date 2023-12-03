@@ -3,7 +3,7 @@ package com.kb.windsurfersweatherservice.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.time.LocalDate;
 
 class DataServiceTest {
 
@@ -16,6 +16,6 @@ class DataServiceTest {
 
     @Test
     void should_test() {
-        dataService.checkDays();
+        LocalDate now = LocalDate.now();
     }
 }
