@@ -21,6 +21,8 @@ public class WeatherClient {
                 API_KEY);
         return Weather.builder()
                 .cityName(response.getCity_name())
+                .lat(response.getLat())
+                .lon(response.getLon())
                 .windSpeed(Arrays.stream(response.getData()).toList().get((int) day).getWind_spd())
                 .temperature(Arrays.stream(response.getData()).toList().get((int) day).getTemp())
                 .build();

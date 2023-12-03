@@ -50,16 +50,19 @@ public class WeatherService {
     }
 
     private String calculateBestSurfingLocation(long day) {
-        Map<String, Float> bestCodntionMap = new HashMap<>();
+        Map<Float, String> bestCodntionMap = new HashMap<>();
         List<Weather> weatherCityList = validSurfingCondition(getWeatherForecastForAllCities(day));
         checkIfThereAreAnyGoodConditions(weatherCityList);
 
         weatherCityList.forEach(weather -> {
             float value = weather.getTemperature() + MULTIPLIER * weather.getWindSpeed();
-            bestCodntionMap.put(weather.getCityName(), value);
+            bestCodntionMap.put(value, weather.getCityName());
         });
-        return Collections.max(bestCodntionMap.keySet());
+
+        Float bestFormulaValue = Collections.max(bestCodntionMap.keySet());
+        return bestCodntionMap.get(bestFormulaValue);
     }
+
 
     private void checkIfThereAreAnyGoodConditions(List<Weather> weatherCityList) {
         if (weatherCityList.isEmpty()) {

@@ -14,4 +14,6 @@ public class Weather {
     private String cityName;
     private float temperature;
     private float windSpeed;
+    private float lat;
+    private float lon;
 }
