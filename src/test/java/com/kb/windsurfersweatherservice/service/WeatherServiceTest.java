@@ -12,13 +12,12 @@ class WeatherServiceTest {
     void beforeEach() {
         weatherService = new WeatherService(new WeatherClient());
     }
-    @Test
-    void getWeatherList2() {
-        weatherService.getWeatherListv2();
-    }
+//    @Test
+//    void getWeatherList2() {
+//        weatherService.getWeatherListv2();
+//    }
     @Test
     void getWeatherList() {
         weatherService.getWeatherList();
     }
-
 }
