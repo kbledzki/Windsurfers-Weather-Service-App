@@ -18,6 +18,6 @@ public class WeatherController {
     @GetMapping("/weather/{date}")
     public Weather getWeather(@PathVariable String date) {
         dataService.checkDays(date);
-        return weatherService.getWeather();
+        return weatherService.getBestLocationToSurf();
     }
 }

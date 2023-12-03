@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.groupingBy;
-
 @Service
 @RequiredArgsConstructor
 public class WeatherService {
@@ -20,29 +18,25 @@ public class WeatherService {
     private static final int MAX_WIND_SPEED = 18;
     private static final int MIN_TEMPERATURE = 5;
     private static final int MAX_TEMPERATURE = 35;
+    private static final int MULTIPLIER = 3;
 
-    public Weather getBestWeather() {
-        String s = checkBestCity();
-        return weatherClient.getWeatherForCity(s);
+
+    public Weather getBestLocationToSurf() {
+        String bestSurfingLocation = calculateBestSurfingLocation();
+        return weatherClient.getWeatherForCity(bestSurfingLocation);
     }
 
-
-    private List<Weather> getWeathers() {
+    private List<Weather> getWeatherForecastForAllCities() {
         List<Weather> weatherCityList = new ArrayList<>();
+
         for (CityName cityName : CityName.values()) {
             Weather weatherForCity = weatherClient.getWeatherForCity(cityName.toString());
             weatherCityList.add(weatherForCity);
         }
-        return forecastValid(weatherCityList);
+        return validSurfingCondition(weatherCityList);
     }
 
-    private String checkBestCity() {
-        List<Weather> weathers = getWeathers();
-        return calculateBest(weathers);
-    }
-
-
-    private List<Weather> forecastValid(List<Weather> weatherCityList) {
+    private List<Weather> validSurfingCondition(List<Weather> weatherCityList) {
         return weatherCityList
                 .stream()
                 .filter(weather -> weather.getTemperature() >= MIN_TEMPERATURE)
@@ -52,48 +46,14 @@ public class WeatherService {
                 .collect(Collectors.toList());
     }
 
-    private String calculateBest(List<Weather> weatherList) {
+    private String calculateBestSurfingLocation() {
+        List<Weather> weatherForecastForAllCities = getWeatherForecastForAllCities();
         Map<String, Float> bestCodntionMap = new HashMap<>();
-        weatherList.forEach(weather -> {
-            float value = weather.getTemperature() + 3 * weather.getWindSpeed();
+
+        weatherForecastForAllCities.forEach(weather -> {
+            float value = weather.getTemperature() + MULTIPLIER * weather.getWindSpeed();
             bestCodntionMap.put(weather.getCityName(), value);
         });
         return Collections.max(bestCodntionMap.keySet());
     }
-
-
-//    public List<Weather> getWeatherList2() {
-//        List<Weather> weatherCityList = new ArrayList<>();
-//        for (CityName cityName : CityName.values()) {
-//            Weather weatherForCity = weatherClient.getWeatherForCity(cityName.toString());
-//            weatherCityList.add(weatherForCity);
-//        }
-//        for (Weather wea : weatherCityList) {
-//            System.out.println(wea);
-//        }
-//        List<Weather> newlist = forecastValid(weatherCityList);
-//        for (Weather wea : newlist) {
-//            System.out.println(wea);
-//        }
-//
-//        Map<String, List<Weather>> groupedByName = newlist
-//                .stream()
-//                .collect(groupingBy(weather -> weather.getCityName()));
-//        System.out.println(groupedByName);
-//        System.out.println(groupedByName.size());
-////        groupedByName.forEach((name, weather) -> ((3 * weather.getWindSpeed() + weather.getTemperature())))
-//        System.out.println(groupedByName);
-//        String calculateBest = calculateBest(newlist);
-//        List<Weather> wewew = groupedByName.get(calculateBest(newlist));
-//        for (Weather wea : wewew) {
-//            System.out.println(wea);
-//        }
-//
-//        List<Weather> weathers = newlist.stream().filter(weather -> weather.getCityName().equals(calculateBest)).toList();
-//        for (Weather wea : weathers) {
-//            System.out.println(wea);
-//        }
-//
-//        return weatherCityList;
-//    }
 }
