@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDate;
-import java.time.Month;
 
 @Service
 public class DataService {
@@ -14,16 +13,26 @@ public class DataService {
     public long checkDays(String dateToCheck) {
         LocalDate dataNow = LocalDate.now();
         LocalDate dataToCheckWeather = parseDate(dateToCheck);
-        return Duration
+        long days = Duration
                 .between(dataNow.atStartOfDay(), dataToCheckWeather.atStartOfDay())
                 .toDays();
+        validDate(dataNow, dataToCheckWeather, days);
+        return days;
+    }
+
+    private void validDate(LocalDate dataNow, LocalDate dataToCheckWeather, long days) {
+        if (dataToCheckWeather.isBefore(dataNow)) {
+            throw new WeatherAppException(WeatherError.PAST_DATE);
+        } else if (days > 15) {
+            throw new WeatherAppException(WeatherError.TOO_DISTANT_DATE);
+        }
     }
 
     private LocalDate parseDate(String dateToCheck) {
         try {
             return LocalDate.parse(dateToCheck);
         } catch (Exception e) {
-            throw new WeatherAppException(WeatherError.WRONG_DATA_FORMAT);
+            throw new WeatherAppException(WeatherError.WRONG_DATE_FORMAT);
         }
     }
 }

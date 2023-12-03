@@ -2,7 +2,6 @@ package com.kb.windsurfersweatherservice.service;
 
 import com.kb.windsurfersweatherservice.model.Weather;
 import com.kb.windsurfersweatherservice.webclient.weather.client.WeatherClient;
-import com.kb.windsurfersweatherservice.webclient.weather.dto.WeatherbitForecastDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

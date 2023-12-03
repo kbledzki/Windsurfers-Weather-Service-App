@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class WeatherbitForecastDto {
+
     private String city_name;
     private float lat;
     private float lon;

@@ -11,7 +11,7 @@ public class WeatherAppExceptionHandler {
     @ExceptionHandler(WeatherAppException.class)
     public ResponseEntity<ErrorInfo> handleException(WeatherAppException e) {
         HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-        if (WeatherError.WRONG_DATA_FORMAT.equals(e.getWeatherError())) {
+        if (WeatherError.WRONG_DATE_FORMAT.equals(e.getWeatherError())) {
             httpStatus = HttpStatus.BAD_REQUEST;
         }
         return ResponseEntity.status(httpStatus).body(new ErrorInfo(e.getWeatherError().getMessage()));
