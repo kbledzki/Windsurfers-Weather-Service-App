@@ -34,6 +34,7 @@ public class WeatherService {
 
         for (City city : City.values()) {
             Weather weatherForCity = weatherClient.getWeatherForCity(city.getName(), day);
+            System.out.println(weatherForCity);
             weatherCityList.add(weatherForCity);
         }
         return weatherCityList;
