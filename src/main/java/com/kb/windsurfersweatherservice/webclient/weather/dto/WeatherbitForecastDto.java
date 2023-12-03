@@ -6,7 +6,7 @@ import lombok.Getter;
 public class WeatherbitForecastDto {
 
     private String city_name;
-    private float lat;
-    private float lon;
+    private double lat;
+    private double lon;
     private WeatherbitDataDto[] data;
 }

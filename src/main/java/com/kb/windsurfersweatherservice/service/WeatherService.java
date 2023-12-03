@@ -2,7 +2,7 @@ package com.kb.windsurfersweatherservice.service;
 
 import com.kb.windsurfersweatherservice.exceptions.WeatherAppException;
 import com.kb.windsurfersweatherservice.exceptions.WeatherError;
-import com.kb.windsurfersweatherservice.model.CityName;
+import com.kb.windsurfersweatherservice.model.City;
 import com.kb.windsurfersweatherservice.model.Weather;
 import com.kb.windsurfersweatherservice.webclient.weather.client.WeatherClient;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class WeatherService {
     private static final int MULTIPLIER = 3;
 
     public Weather getBestLocationToSurf(String date) {
-        long day = dataService.checkDays(date);
+        long day = dataService.calculateDayToCheckWeather(date);
         String bestSurfingLocation = calculateBestSurfingLocation(day);
         return weatherClient.getWeatherForCity(bestSurfingLocation, day);
     }
@@ -32,8 +32,8 @@ public class WeatherService {
     private List<Weather> getWeatherForecastForAllCities(long day) {
         List<Weather> weatherCityList = new ArrayList<>();
 
-        for (CityName cityName : CityName.values()) {
-            Weather weatherForCity = weatherClient.getWeatherForCity(cityName.toString(), day);
+        for (City city : City.values()) {
+            Weather weatherForCity = weatherClient.getWeatherForCity(city.getName(), day);
             weatherCityList.add(weatherForCity);
         }
         return weatherCityList;
@@ -50,19 +50,18 @@ public class WeatherService {
     }
 
     private String calculateBestSurfingLocation(long day) {
-        Map<Float, String> bestCodntionMap = new HashMap<>();
+        Map<Double, String> bestCodntionMap = new HashMap<>();
         List<Weather> weatherCityList = validSurfingCondition(getWeatherForecastForAllCities(day));
         checkIfThereAreAnyGoodConditions(weatherCityList);
 
         weatherCityList.forEach(weather -> {
-            float value = weather.getTemperature() + MULTIPLIER * weather.getWindSpeed();
+            double value = weather.getTemperature() + MULTIPLIER * weather.getWindSpeed();
             bestCodntionMap.put(value, weather.getCityName());
         });
 
-        Float bestFormulaValue = Collections.max(bestCodntionMap.keySet());
+        Double bestFormulaValue = Collections.max(bestCodntionMap.keySet());
         return bestCodntionMap.get(bestFormulaValue);
     }
-
 
     private void checkIfThereAreAnyGoodConditions(List<Weather> weatherCityList) {
         if (weatherCityList.isEmpty()) {

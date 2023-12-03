@@ -12,7 +12,7 @@ public class DataService {
 
     private static final int MAX_FORECAST_DAY = 15;
 
-    public long checkDays(String dateToCheck) {
+    public long calculateDayToCheckWeather(String dateToCheck) {
         LocalDate dataNow = LocalDate.now();
         LocalDate dataToCheckWeather = parseDate(dateToCheck);
         long days = Duration

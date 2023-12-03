@@ -5,6 +5,6 @@ import lombok.Getter;
 @Getter
 public class WeatherbitDataDto {
 
-    private float temp;
-    private float wind_spd;
+    private double temp;
+    private double wind_spd;
 }

@@ -12,8 +12,8 @@ import lombok.ToString;
 public class Weather {
 
     private String cityName;
-    private float temperature;
-    private float windSpeed;
-    private float lat;
-    private float lon;
+    private double temperature;
+    private double windSpeed;
+    private double lat;
+    private double lon;
 }
