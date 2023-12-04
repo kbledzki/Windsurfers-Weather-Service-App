@@ -1,7 +1,6 @@
 # Worldwide Windsurfers Weather Service application
 
-#### This project is a simple RESTful web API that connect with Weatherbit api - weather forecast 16 day and returns
-#### the best location for windsurfing from selected cities for chosen day.
+#### This project is a simple RESTful web API that connect with Weatherbit api - weather forecast 16 day and returns the best location for windsurfing from selected cities for chosen day.
 #### Selected cities:
 
 * JASTARNIA(Poland),
@@ -17,7 +16,7 @@ All cities are coded in enum City, if you want to check more locations just add 
 ### 1. Clone this repository
 
 ```bash
-  git clone https://github.com/kb/
+  git clone https://github.com/kbledzki/Windsurfers-Weather-Service-App.git
 ```
 
 Go to project directory
@@ -51,7 +50,7 @@ mvn spring-boot:run
        GET /api/v1/weather/{date}
 * Example:
 
-       GET /api/v1/weather/{date}/2023-12-10
+       GET /api/v1/weather/2023-12-10
 * Response:
 
        { 
@@ -61,4 +60,3 @@ mvn spring-boot:run
            "lat": 14.7,
            "lat": -61.0;
        }
-
