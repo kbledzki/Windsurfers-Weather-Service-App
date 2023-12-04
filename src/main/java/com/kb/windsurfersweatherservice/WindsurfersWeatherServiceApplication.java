@@ -9,5 +9,4 @@ public class WindsurfersWeatherServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(WindsurfersWeatherServiceApplication.class, args);
     }
-
 }
