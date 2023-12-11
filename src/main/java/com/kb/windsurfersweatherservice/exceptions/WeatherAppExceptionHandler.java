@@ -27,6 +27,6 @@ public class WeatherAppExceptionHandler {
         map.put("status", httpStatus.value());
         map.put("message", e.getWeatherError().getMessage());
         map.put("path", request.getDescription(false));
-        return new ResponseEntity<>(map, httpStatus);
+        return new ResponseEntity<>(map, httpStatus);//mapa tutaj nie bardzo
     }
 }
