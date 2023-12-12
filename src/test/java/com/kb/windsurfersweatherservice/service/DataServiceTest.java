@@ -1,7 +1,6 @@
 package com.kb.windsurfersweatherservice.service;
 
 import com.kb.windsurfersweatherservice.exceptions.WeatherAppException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
@@ -13,12 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class DataServiceTest {
 
-    private DataService dataService;
-
-    @BeforeEach
-    void beforeEach() {
-        dataService = new DataService();
-    }
+    private DataService dataService = new DataService();
 
     @Test
     void should_return_days_when_given_date() {
@@ -41,7 +35,6 @@ class DataServiceTest {
         String pastDate = UtilsData.pastDate;
 
         //when&then
-
         assertThrows(WeatherAppException.class,
                 () -> dataService.calculateDayToCheckWeather(pastDate));
     }

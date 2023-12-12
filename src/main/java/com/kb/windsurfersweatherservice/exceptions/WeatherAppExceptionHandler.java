@@ -7,26 +7,23 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 @RestControllerAdvice
 public class WeatherAppExceptionHandler {
 
+    private final List<WeatherError> errorList = List.of(WeatherError.values());
+
     @ExceptionHandler(WeatherAppException.class)
-    public ResponseEntity<Object> handleException(WeatherAppException e, WebRequest request) {
+    public ResponseEntity<WeatherExceptionDto> handleException(WeatherAppException e, WebRequest request) {
         HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-        if (WeatherError.WRONG_DATE_FORMAT.equals(e.getWeatherError())
-                || WeatherError.BAD_WEATHER_CONDITIONS_FOR_ALL_CITIES.equals(e.getWeatherError())
-                || WeatherError.PAST_DATE.equals(e.getWeatherError())
-                || WeatherError.TOO_DISTANT_DATE.equals(e.getWeatherError())) {
+        if (errorList.stream().anyMatch(error -> error.equals(e.getWeatherError()))) {
             httpStatus = HttpStatus.BAD_REQUEST;
         }
-        Map<String, Object> map = new HashMap<>();
-        map.put("timestamp", LocalDateTime.now());
-        map.put("status", httpStatus.value());
-        map.put("message", e.getWeatherError().getMessage());
-        map.put("path", request.getDescription(false));
-        return new ResponseEntity<>(map, httpStatus);//mapa tutaj nie bardzo
+        return ResponseEntity.status(httpStatus)
+                .body(new WeatherExceptionDto(
+                        e.getWeatherError().getMessage(),
+                        LocalDateTime.now(),
+                        httpStatus.value()));
     }
 }

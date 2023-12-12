@@ -21,7 +21,17 @@ public class UtilsData {
     public static final Weather weatherPissouri = Weather.builder()
             .cityName("Pissouri")
             .temperature(5.1)
-            .windSpeed(3.1)
+            .windSpeed(5.1)
+            .build();
+    public static final Weather weatherHel = Weather.builder()
+            .cityName("Hel")
+            .temperature(20.2)
+            .windSpeed(6.1)
+            .build();
+    public static final Weather weatherGdansk = Weather.builder()
+            .cityName("Gdansk")
+            .temperature(20.2)
+            .windSpeed(6.1)
             .build();
     public static final String date = "2023-12-12";
     public static final String pastDate = "2022-12-12";

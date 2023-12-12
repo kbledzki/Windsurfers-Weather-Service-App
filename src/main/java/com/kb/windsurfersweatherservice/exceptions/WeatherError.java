@@ -12,6 +12,5 @@ public enum WeatherError {
     TOO_DISTANT_DATE("App show forecast only for 16 days!"),
     BAD_WEATHER_CONDITIONS_FOR_ALL_CITIES("There is no good weather condition for surfing on that day. Try another day!");
 
-
     private String message;
 }
