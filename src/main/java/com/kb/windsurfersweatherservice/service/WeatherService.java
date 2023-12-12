@@ -34,7 +34,6 @@ public class WeatherService {
 
         for (City city : City.values()) {
             Weather weatherForCity = weatherClient.getWeatherForCity(city.getName(), day);
-            System.out.println(weatherForCity);
             weatherCityList.add(weatherForCity);
         }
         return weatherCityList;
@@ -43,6 +42,7 @@ public class WeatherService {
     private List<Weather> validSurfingCondition(List<Weather> weatherCityList) {
         return weatherCityList
                 .stream()
+                //można to napisac w jednym filter() i do metody wydzielić predykat
                 .filter(weather -> weather.getTemperature() >= MIN_TEMPERATURE)
                 .filter(weather -> weather.getTemperature() <= MAX_TEMPERATURE)
                 .filter(weather -> weather.getWindSpeed() >= MIN_WIND_SPEED)
@@ -56,6 +56,7 @@ public class WeatherService {
         checkIfThereAreAnyGoodConditions(weatherCityList);
 
         weatherCityList.forEach(weather -> {
+            //optymalizacja, nie jest potrzebne liczenie zawsze, tylko dopiero jak min dwie spełniają założenia
             double value = weather.getTemperature() + MULTIPLIER * weather.getWindSpeed();
             bestCodntionMap.put(value, weather.getCityName());
         });
