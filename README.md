@@ -60,4 +60,3 @@ mvn spring-boot:run
            "lat": 14.7,
            "lat": -61.0;
        }
-

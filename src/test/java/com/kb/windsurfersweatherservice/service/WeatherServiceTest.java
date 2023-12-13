@@ -1,7 +1,8 @@
 package com.kb.windsurfersweatherservice.service;
 
+import com.kb.windsurfersweatherservice.data.UtilsData;
 import com.kb.windsurfersweatherservice.exceptions.WeatherAppException;
-import com.kb.windsurfersweatherservice.model.Weather;
+import com.kb.windsurfersweatherservice.model.WeatherDto;
 import com.kb.windsurfersweatherservice.webclient.weather.client.WeatherClient;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,7 +35,7 @@ class WeatherServiceTest {
         when(dataService.calculateDayToCheckWeather(anyString())).thenReturn(UtilsData.days);
 
         //when
-        Weather bestLocationToSurf = weatherService.getBestLocationToSurf(UtilsData.date);
+        WeatherDto bestLocationToSurf = weatherService.getBestLocationToSurf(UtilsData.date);
 
         //then
         assertEquals(bestLocationToSurf.getCityName(), UtilsData.weatherBridgetown.getCityName());
@@ -49,5 +50,19 @@ class WeatherServiceTest {
         //when&then
         assertThrows(WeatherAppException.class,
                 () -> weatherService.getBestLocationToSurf(UtilsData.date));
+    }
+
+    @Test
+    void should_return_expected_city_when_formula_value_is_the_same() {
+        //given
+        when(weatherClient.getWeatherForCity(anyString(), anyLong()))
+                .thenReturn(UtilsData.weatherHel,UtilsData.weatherGdansk);
+        when(dataService.calculateDayToCheckWeather(anyString())).thenReturn(UtilsData.days);
+
+        //when
+        WeatherDto bestLocationToSurf = weatherService.getBestLocationToSurf(UtilsData.date);
+
+        //then
+        assertEquals(bestLocationToSurf.getCityName(), UtilsData.weatherHel.getCityName());
     }
 }
