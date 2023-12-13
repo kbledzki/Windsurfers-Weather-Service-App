@@ -40,7 +40,7 @@ public class WeatherService {
         return weatherCityList;
     }
 
-    public List<Weather> validSurfingCondition(List<Weather> weatherCityList) {
+    private List<Weather> validSurfingCondition(List<Weather> weatherCityList) {
         return weatherCityList
                 .stream()
                 .filter(this::validWeatherCondition)
@@ -61,7 +61,7 @@ public class WeatherService {
         return getCityWithBestCondition(weatherCityList);
     }
 
-    public Weather getCityWithBestCondition(List<Weather> weatherCityList) {
+    private Weather getCityWithBestCondition(List<Weather> weatherCityList) {
         List<Weather> weatherList = new ArrayList<>();
 
         if (weatherCityList.size() == 1) {

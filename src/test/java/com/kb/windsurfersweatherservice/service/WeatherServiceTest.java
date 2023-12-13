@@ -1,5 +1,6 @@
 package com.kb.windsurfersweatherservice.service;
 
+import com.kb.windsurfersweatherservice.data.UtilsData;
 import com.kb.windsurfersweatherservice.exceptions.WeatherAppException;
 import com.kb.windsurfersweatherservice.model.WeatherDto;
 import com.kb.windsurfersweatherservice.webclient.weather.client.WeatherClient;

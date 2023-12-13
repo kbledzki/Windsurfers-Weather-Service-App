@@ -1,4 +1,4 @@
-package com.kb.windsurfersweatherservice.service;
+package com.kb.windsurfersweatherservice.data;
 
 import com.kb.windsurfersweatherservice.model.Weather;
 
@@ -20,7 +20,7 @@ public class UtilsData {
             .build();
     public static final Weather weatherPissouri = Weather.builder()
             .cityName("Pissouri")
-            .temperature(5.1)
+            .temperature(4.1)
             .windSpeed(5.1)
             .build();
     public static final Weather weatherHel = Weather.builder()
@@ -33,8 +33,7 @@ public class UtilsData {
             .temperature(20.2)
             .windSpeed(6.1)
             .build();
+
     public static final String date = "2023-12-12";
-    public static final String pastDate = "2022-12-12";
-    public static final String futureDate = "2032-12-12";
     public static final Long days = 4L;
 }
