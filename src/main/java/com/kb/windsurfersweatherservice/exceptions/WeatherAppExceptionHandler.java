@@ -4,7 +4,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.WebRequest;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,7 +14,7 @@ public class WeatherAppExceptionHandler {
     private final List<WeatherError> errorList = List.of(WeatherError.values());
 
     @ExceptionHandler(WeatherAppException.class)
-    public ResponseEntity<WeatherExceptionDto> handleException(WeatherAppException e, WebRequest request) {
+    public ResponseEntity<WeatherExceptionDto> handleException(WeatherAppException e) {
         HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
         if (errorList.stream().anyMatch(error -> error.equals(e.getWeatherError()))) {
             httpStatus = HttpStatus.BAD_REQUEST;
