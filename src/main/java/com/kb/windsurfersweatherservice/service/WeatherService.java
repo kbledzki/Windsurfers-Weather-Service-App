@@ -4,12 +4,14 @@ import com.kb.windsurfersweatherservice.exceptions.WeatherAppException;
 import com.kb.windsurfersweatherservice.exceptions.WeatherError;
 import com.kb.windsurfersweatherservice.model.City;
 import com.kb.windsurfersweatherservice.model.Weather;
+import com.kb.windsurfersweatherservice.model.WeatherDto;
 import com.kb.windsurfersweatherservice.webclient.weather.client.WeatherClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -23,10 +25,9 @@ public class WeatherService {
     private static final int MAX_TEMPERATURE = 35;
     private static final int MULTIPLIER = 3;
 
-    public Weather getBestLocationToSurf(String date) {
+    public WeatherDto getBestLocationToSurf(String date) {
         long day = dataService.calculateDayToCheckWeather(date);
-        String bestSurfingLocation = calculateBestSurfingLocation(day);
-        return weatherClient.getWeatherForCity(bestSurfingLocation, day);
+        return mapToDto(calculateBestSurfingLocation(day));
     }
 
     private List<Weather> getWeatherForecastForAllCities(long day) {
@@ -34,7 +35,6 @@ public class WeatherService {
 
         for (City city : City.values()) {
             Weather weatherForCity = weatherClient.getWeatherForCity(city.getName(), day);
-            System.out.println(weatherForCity);
             weatherCityList.add(weatherForCity);
         }
         return weatherCityList;
@@ -43,30 +43,53 @@ public class WeatherService {
     private List<Weather> validSurfingCondition(List<Weather> weatherCityList) {
         return weatherCityList
                 .stream()
-                .filter(weather -> weather.getTemperature() >= MIN_TEMPERATURE)
-                .filter(weather -> weather.getTemperature() <= MAX_TEMPERATURE)
-                .filter(weather -> weather.getWindSpeed() >= MIN_WIND_SPEED)
-                .filter(weather -> weather.getWindSpeed() <= MAX_WIND_SPEED)
-                .collect(Collectors.toList());
+                .filter(this::validWeatherCondition)
+                .toList();
     }
 
-    private String calculateBestSurfingLocation(long day) {
-        Map<Double, String> bestCodntionMap = new HashMap<>();
+    private boolean validWeatherCondition(Weather weather) {
+        return weather.getTemperature() >= MIN_TEMPERATURE
+                && weather.getTemperature() <= MAX_TEMPERATURE
+                && weather.getWindSpeed() >= MIN_WIND_SPEED
+                && weather.getWindSpeed() <= MAX_WIND_SPEED;
+    }
+
+    private Weather calculateBestSurfingLocation(long day) {
         List<Weather> weatherCityList = validSurfingCondition(getWeatherForecastForAllCities(day));
         checkIfThereAreAnyGoodConditions(weatherCityList);
 
-        weatherCityList.forEach(weather -> {
-            double value = weather.getTemperature() + MULTIPLIER * weather.getWindSpeed();
-            bestCodntionMap.put(value, weather.getCityName());
-        });
+        return getCityWithBestCondition(weatherCityList);
+    }
 
-        Double bestFormulaValue = Collections.max(bestCodntionMap.keySet());
-        return bestCodntionMap.get(bestFormulaValue);
+    private Weather getCityWithBestCondition(List<Weather> weatherCityList) {
+        List<Weather> weatherList = new ArrayList<>();
+
+        if (weatherCityList.size() == 1) {
+            return weatherCityList.get(0);
+        } else {
+            weatherCityList.forEach(weather -> {
+                weather.setFormulaValue(weather.getTemperature() + MULTIPLIER * weather.getWindSpeed());
+                weatherList.add(weather);
+            });
+            return weatherList.stream()
+                    .max(Comparator.comparing(Weather::getFormulaValue))
+                    .get();
+        }
     }
 
     private void checkIfThereAreAnyGoodConditions(List<Weather> weatherCityList) {
         if (weatherCityList.isEmpty()) {
             throw new WeatherAppException(WeatherError.BAD_WEATHER_CONDITIONS_FOR_ALL_CITIES);
         }
+    }
+
+    private WeatherDto mapToDto(Weather weather) {
+        return WeatherDto.builder()
+                .cityName(weather.getCityName())
+                .temperature(weather.getTemperature())
+                .windSpeed(weather.getWindSpeed())
+                .lat(weather.getLat())
+                .lon(weather.getLon())
+                .build();
     }
 }
